@@ -1,0 +1,9 @@
+django
+gunicorn
+django-heroku
+requests
+lxml
+time
+BeautifulSoup
+json
+firebase_admin
