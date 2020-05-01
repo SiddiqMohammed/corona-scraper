@@ -4,5 +4,4 @@ django-heroku
 requests
 lxml
 BeautifulSoup4
-json
 firebase_admin
