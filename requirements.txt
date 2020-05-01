@@ -3,6 +3,6 @@ gunicorn
 django-heroku
 requests
 lxml
-BeautifulSoup
+BeautifulSoup4
 json
 firebase_admin
