@@ -55,7 +55,6 @@ def updates():
     i = 0
 
     while i < len(listed1):
-        # result = firebase.put(put_link, "'{}'".format(text_list[i]), listed1[i])
         #adding first data
         doc_ref = db.collection('data').document('lgtq2xqlRv40YirvlJ8n')
         
@@ -75,7 +74,7 @@ def Start():
 while True:
     Start()     
     print("updated")
-    time.sleep(10)  #1800s = 30mins
+    time.sleep(3600)  #1800s = 30mins
 
 #Running The Code For A Specific Number Of times Or Specific Amount Of Time
 # for i in range(1):       #Number Of Times
