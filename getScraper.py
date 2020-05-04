@@ -24,13 +24,21 @@ put_link = data["put_link"]
 x = ''
 
 
-
+file1 = open("countries-list.txt","r") 
+file1.seek(0) 
+array = file1.readlines()
+countries = []
+countries_ws = []
+for i in range(len(array)):
+    x = array[i]
+    x = x.replace("\n", "")
+    countries.append(x)
+file1.close() 
+# print(countries)
+page = requests.get(url)
+soup = BeautifulSoup(page.text, "lxml")
 
 def updates():
-    # time.sleep(5)
-
-    html = requests.get(url)
-    soup = BeautifulSoup(html.text, "lxml")
 
     listed = []
     listed1 = []
@@ -39,19 +47,15 @@ def updates():
    
    
     for my_tag in soup.find_all(class_="number-table"):
-        listed.append(my_tag.text.strip())
-
-    for i in range(len(listed)):
-        x = listed[i]
+        x = my_tag.text.strip()
         x = x.replace(",", "")
         listed1.append(int(x))
-
     
+
     listed1.append(listed1[0] + listed1[1])
     listed1.append(listed1[2] + listed1[3])
     listed1.append(listed1[4] + listed1[5])
 
-    print(listed1)
     i = 0
 
     while i < len(listed1):
@@ -61,20 +65,55 @@ def updates():
         doc_ref.update({text_list[i] : listed1[i]})
         i += 1
 
+    global yeet
+    yeet += 1
+
+
+
+
+def updates_each_country():
+    #Updating total cases for each country 
+    country_values = []
+
+    j = 0
+
+    while j < len(countries):
+
+        remComma = soup.find("td", text=countries[j]).find_next_sibling("td").text
+        remComma = remComma.replace(",", "")
+        country_values.append(remComma)
+        j += 1
+
+    
+    i = 0
+    for i in range(len(countries)):
+        x = countries[i]
+        x = x.replace(" ", "_")
+        x = x.replace(".", "_")
+        countries_ws.append(x)
+
+    i = 0
+    while i < len(countries):
+        #adding first data
+        doc_ref = db.collection('data').document('mm')
+        # doc_ref.delete()
+        doc_ref.update({countries_ws[i] : country_values[i]})
+        i += 1
     
 
 
 
-#Main Function Starts Seperate Which Will Be Useful If Adding Functions In The Future
-def Start():
-    updates()
-
+yeet = 0
 
 #Running The Code Forever
 while True:
-    Start()     
-    print("updated")
-    time.sleep(3600)  #1800s = 30mins
+    updates()     
+    print("updated main numbers")
+    if (yeet == 24):
+        updates_each_country()
+        print("updated each country")
+        yeet = 0
+    time.sleep(3600)  #1800s = 30mins   3600s = 1hr     86400 = 1day
 
 #Running The Code For A Specific Number Of times Or Specific Amount Of Time
 # for i in range(1):       #Number Of Times
