@@ -24,17 +24,19 @@ put_link = data["put_link"]
 x = ''
 
 
-file1 = open("countries-list.txt","r") 
-file1.seek(0) 
-array = file1.readlines()
-countries = []
+
 countries_ws = []
-for i in range(len(array)):
-    x = array[i]
-    x = x.replace("\n", "")
-    countries.append(x)
-file1.close() 
-# print(countries)
+
+
+with open('codes2.json') as f:
+    save = list(json.load(f).items())
+
+with open('codes2.json') as f:
+    codes = list(json.load(f))
+
+with open('cc.json') as f:
+    countries = list(json.load(f))
+
 page = requests.get(url)
 soup = BeautifulSoup(page.text, "lxml")
 
@@ -84,23 +86,25 @@ def updates_each_country():
         country_values.append(remComma)
         j += 1
 
-    
     i = 0
+    j = 0
+    new_dict = []
+    flag = 0
+
     for i in range(len(countries)):
-        x = countries[i]
-        x = x.replace(" ", "_")
-        x = x.replace(".", "_")
-        countries_ws.append(x)
+        for j in range(len(codes)):
+            if(countries[i] == codes[j]):
+                new_dict.append(save[j][1])
+    
 
     i = 0
     while i < len(countries):
         #adding first data
         doc_ref = db.collection('data').document('mm')
         # doc_ref.delete()
-        doc_ref.update({countries_ws[i] : country_values[i]})
+        doc_ref.update({new_dict[i] : country_values[i]})
         i += 1
     
-
 
 
 yeet = 0
